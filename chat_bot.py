@@ -11,16 +11,16 @@ llm = OpenAI(
 
 
 def bot(message):
-    llm.chat.completions.create(
-        model="meta-llama/llama-prompt-guard-2-22m",
+    response = llm.chat.completions.create(
+        model="openai/gpt-oss-20b", messages=[{"role": "user", "content": message}]
 
     )
-    answer = "hello"
-    return answer
+
+    return response.choices[0].message.content
 
 
 def main():
-    user_input = input("AAsk something: ")
+    user_input = input("Ask something: ")
     bot_answer = bot(user_input)
     print(f"Bot: {bot_answer}")
 

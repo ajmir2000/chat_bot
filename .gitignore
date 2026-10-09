@@ -1,0 +1,12 @@
+# Ignore Mac system files
+.DS_Store
+
+# Ignore dependency folders
+node_modules/
+env/
+
+# Ignore files containing sensitive API keys or credentials
+.env
+
+# Ignore all log files
+*.log

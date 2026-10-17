@@ -16,6 +16,8 @@ class ChatBot:
             {"role": "system", "content": "You are a helpful assistant. you name is Azar bot interduce yourself as Azar bot and you are a helpful assistant. in fist message you should introduce yourself as Azar bot and you are a helpful assistant."}
         ]
         self.total_tokens = 0
+        self.input_token = 0
+        self.output_token = 0
 
     def bot(self, message):
         self.messages.append({"role": "user", "content": message})
@@ -26,6 +28,8 @@ class ChatBot:
         response_text = response.choices[0].message.content
         self.messages.append({"role": "assistant", "content": response_text})
         self.total_tokens += response.usage.total_tokens
+        self.input_token += response.usage.prompt_tokens
+        self.output_token += response.usage.completion_tokens
         return response_text
 
     def chat(self):
@@ -43,6 +47,8 @@ class ChatBot:
         for message in self.messages:
             print(message)
         print(f"Total tokens used: {self.total_tokens}")
+        print(
+            f"Input tokens used: $ {self.input_token * 0.05 + self.output_token * 0.05 / 1_000_000}")
 
 
 def main():

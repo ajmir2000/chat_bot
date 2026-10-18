@@ -1,7 +1,7 @@
-import tiktoken
 import dotenv
 import os
 from openai import OpenAI
+from transformers import AutoTokenizer
 dotenv.load_dotenv()
 
 
@@ -32,7 +32,8 @@ class ChatBot:
         return response_text
 
     def chat(self):
-        encoding = tiktoken.get_encoding("cl100k_base")
+        encoding = AutoTokenizer.from_pretrained(
+            "deepseek-ai/DeepSeek-V4.1-Flash-1017")
         while True:
             user_input = input(
                 "Ask something (type q to quit): ").strip().lower()
@@ -42,9 +43,16 @@ class ChatBot:
 
             token_count = len(encoding.encode(user_input))
 
+            print(f"Token count for your input: {token_count}")
+
             if token_count > 10:
                 print(
                     f"Your input is too long ({token_count} tokens). Please limit your input to 10 tokens.")
+                continue
+
+            if self.total_tokens > 300:
+                print(
+                    f"Total tokens used exceeded 300 tokens. Please limit your input.")
                 continue
 
             bot_answer = self.bot(user_input)

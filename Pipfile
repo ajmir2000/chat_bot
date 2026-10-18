@@ -8,6 +8,7 @@ python-dotenv = "*"
 openai = "*"
 dotenv = "*"
 tiktoken = "*"
+transformers = "*"
 
 [dev-packages]
 

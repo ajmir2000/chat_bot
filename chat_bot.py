@@ -21,14 +21,25 @@ class ChatBot:
     def bot(self, message):
         self.messages.append({"role": "user", "content": message})
         response = self.llm.chat.completions.create(
-            model="openai/gpt-oss-20b", messages=self.messages, temperature=0.7, max_tokens=150
+            model="openai/gpt-oss-20b", messages=self.messages, temperature=0.7, max_tokens=150, stream=True
 
         )
-        response_text = response.choices[0].message.content
+        response_text = ""
+
+        for chunk in response:
+            if chunk.choices:
+                delta = chunk.choices[0].delta.content
+
+                if delta:
+                    print(delta, end="", flush=True)
+                    response_text += delta
+
+            if chunk.usage:
+                self.total_tokens += chunk.usage.total_tokens
+                self.input_token += chunk.usage.prompt_tokens
+                self.output_token += chunk.usage.completion_tokens
+
         self.messages.append({"role": "assistant", "content": response_text})
-        self.total_tokens += response.usage.total_tokens
-        self.input_token += response.usage.prompt_tokens
-        self.output_token += response.usage.completion_tokens
         return response_text
 
     def chat(self):
